@@ -1,5 +1,5 @@
 # ⚙️🔒 AgentOps Security Workflows
-
+Production-grade security patterns for operating AI agents at scale — least-privilege access, secrets management, audit logging, MCP controls, and multi-agent Zero Trust, with real architecture diagrams and code.
 > Production-grade security patterns for operating AI agents at scale — least-privilege access, secrets management, audit logging, MCP controls, and multi-agent Zero Trust, with real architecture diagrams and code.
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
