@@ -1,0 +1,66 @@
+# configs/anomaly-detection-rules.yaml
+# Alert rules for Workflow 3: Audit Logging & Traceability Pipeline
+# These rules fire when agent behavior deviates from expected patterns.
+
+rules:
+  - name: high_volume_crm_access
+    description: "Agent is querying customer records at an unusually high rate"
+    condition:
+      tool_name: "crm.lookup_customer"
+      threshold: 50
+      window: "1 minute"
+    action: alert_and_pause
+    severity: high
+
+  - name: repeated_tool_failures
+    description: "Agent is failing repeatedly — possible stuck loop or broken tool"
+    condition:
+      status: "failure"
+      threshold: 10
+      window: "per_run"
+    action: alert_and_terminate
+    severity: high
+
+  - name: unexpected_tool_use
+    description: "Agent attempted to use a tool not in its approved list"
+    condition:
+      tool_name: "NOT IN agent.allowed_tools"
+    action: block_and_alert
+    severity: critical
+
+  - name: large_output_on_read
+    description: "Agent returned an unusually large output from a read operation — possible data exfiltration"
+    condition:
+      output_size_bytes: ">100000"
+      tool_name: "CONTAINS read"
+    action: quarantine_and_alert
+    severity: critical
+
+  - name: off_hours_execution
+    description: "Agent running outside of expected business hours — verify this is authorized"
+    condition:
+      time_of_day: "NOT BETWEEN 07:00 AND 20:00 UTC"
+      environment: "production"
+    action: alert_only
+    severity: medium
+
+  - name: excessive_llm_calls
+    description: "Agent making far more LLM calls than expected — possible infinite loop"
+    condition:
+      action_type: "llm_call"
+      threshold: 50
+      window: "per_run"
+    action: alert_and_terminate
+    severity: high
+
+alert_destinations:
+  - type: slack
+    channel: "#ai-security-alerts"
+    on_severity: ["high", "critical"]
+
+  - type: pagerduty
+    on_severity: ["critical"]
+
+  - type: email
+    recipients: ["security-team@company.com"]
+    on_severity: ["high", "critical"]
