@@ -74,5 +74,5 @@ See [SECURITY_CHECKLIST.md](SECURITY_CHECKLIST.md) for the full list before ship
 ---
 
 *Related repos:*
-- *[agentic-ai-landscape](https://github.com/YOUR_USERNAME/agentic-ai-landscape) — framework guide*
-- *[cisco-ai-security-toolkit](https://github.com/YOUR_USERNAME/cisco-ai-security-toolkit) — scanning and validation tools*
+- *[agentic-ai-landscape](https://github.com/gehad-alaa-abaas/agentic-ai-landscape) — framework guide*
+- *[cisco-ai-security-toolkit](https://github.com/gehad-alaa-abaas/cisco-ai-security-toolkit) — scanning and validation tools*
