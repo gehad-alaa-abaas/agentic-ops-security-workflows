@@ -1,0 +1,53 @@
+# configs/mcp-gateway.yaml
+# Configuration for Workflow 4: MCP Server Access Control Gateway
+
+mcp_gateway:
+  auth:
+    method: jwt
+    signing_key_env: MCP_GATEWAY_SIGNING_KEY
+    token_ttl: 900                  # 15 minutes
+
+  agents:
+    - id: research-agent
+      allowed_servers:
+        - name: github-mcp
+          url: https://mcp.github.com/sse
+          allowed_tools:
+            - search_repositories
+            - read_file
+            - list_issues
+          rate_limit: "30/minute"
+
+        - name: brave-search-mcp
+          url: https://mcp.brave.com/sse
+          allowed_tools:
+            - web_search
+          rate_limit: "20/minute"
+
+    - id: support-agent
+      allowed_servers:
+        - name: crm-mcp
+          url: https://internal-crm.company.com/mcp
+          allowed_tools:
+            - lookup_customer
+            - create_ticket
+            - update_ticket
+            # delete_customer is intentionally NOT listed
+          rate_limit: "60/minute"
+
+  logging:
+    level: full
+    destination: splunk
+    include_fields:
+      - agent_id
+      - server_name
+      - tool_name
+      - input_hash
+      - response_schema_valid
+      - duration_ms
+      - timestamp
+
+  response_validation:
+    enabled: true
+    schema_source: "schemas/mcp-responses/"   # JSON Schema files per server
+    on_invalid: block_and_alert
